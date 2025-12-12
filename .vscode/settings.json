@@ -1,0 +1,22 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.gradle.enabled": true,
+  "java.import.maven.enabled": true,
+  "java.completion.imports.enabled": true,
+
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  },
+
+  "[java]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    }
+  },
+
+  "java.format.enabled": true,
+
+  "spring-boot.ls.enabled": true,
+  "explorer.excludeGitIgnore": true
+}
