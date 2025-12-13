@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: prod   # default profile when running locally (can be overridden)
+
+app:
+  name: User Service (common name)
+  env: default
+  # app.env will be defined in profile-specific files
+
+server:
+  port: 8080

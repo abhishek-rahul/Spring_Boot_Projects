@@ -1,0 +1,11 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+app:
+  env: hihiii
+
+# dev-only props can go here
+server:
+  port: 8080
