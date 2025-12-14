@@ -2,6 +2,8 @@ package com.abhicom.userservice.service;
 
 import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
+import com.abhicom.userservice.exception.BadRequestException;
+import com.abhicom.userservice.exception.NotFoundException;
 import com.abhicom.userservice.model.User;
 import com.abhicom.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,11 @@ public class UserService {
         this.repo = repo;
     }
 
-    public UserResponse register(CreateUserRequest req) {
-        // keeping it simple for Usecase A (no validation yet)
-        if (req.getEmail() == null || req.getEmail().isBlank()) {
-            throw new IllegalArgumentException("email is required");
-        }
+    public UserResponse createUser(CreateUserRequest req) {
+        // validation is already handled by @Valid, so don’t re-check blanks here
+
         if (repo.existsByEmail(req.getEmail())) {
-            throw new IllegalArgumentException("email already exists");
+            throw new BadRequestException("email already exists");
         }
 
         String id = UUID.randomUUID().toString();
@@ -35,13 +35,13 @@ public class UserService {
 
     public UserResponse getById(String id) {
         User user = repo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("user not found: " + id));
+                .orElseThrow(() -> new NotFoundException("user not found: " + id));
         return toResponse(user);
     }
 
     public UserResponse getByEmail(String email) {
         User user = repo.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("user not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("user not found with email: " + email));
         return toResponse(user);
     }
 

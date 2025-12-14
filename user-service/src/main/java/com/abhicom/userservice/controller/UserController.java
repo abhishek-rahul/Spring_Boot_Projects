@@ -3,6 +3,11 @@ package com.abhicom.userservice.controller;
 import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.service.UserService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +25,8 @@ public class UserController {
     // 1) User registration (JSON -> Java object)
     // POST /api/users
     @PostMapping
-    public ResponseEntity<UserResponse> register(@RequestBody CreateUserRequest req) {
-        UserResponse created = service.register(req);
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody CreateUserRequest req) {
+        UserResponse created = service.createUser(req);
         return ResponseEntity.status(201).body(created);
     }
 
@@ -35,10 +40,8 @@ public class UserController {
     // 3) Search by email (RequestParam)
     // GET /api/users?email=...
     @GetMapping
-    public ResponseEntity<UserResponse> search(@RequestParam(required = false) String email) {
-        if (email == null || email.isBlank()) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<UserResponse> search(
+            @RequestParam @NotBlank(message = "email query param is required") @Email(message = "email query param must be valid") String email) {
         return ResponseEntity.ok(service.getByEmail(email));
     }
 
