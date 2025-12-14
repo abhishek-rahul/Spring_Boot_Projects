@@ -3,10 +3,15 @@ spring:
     name: user-service
   profiles:
     active: prod   # default profile when running locally (can be overridden)
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
 
 app:
   name: User Service (common name)
   env: default
+  upload-dir: uploads
   # app.env will be defined in profile-specific files
 
 server:
