@@ -1,23 +1,33 @@
 package com.abhicom.userservice.repository;
 
+import com.abhicom.userservice.model.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class UserRepository {
 
-    // Temporary in-memory storage (just for skeleton)
-    private final List<String> users = new ArrayList<>();
+    private final Map<String, User> store = new ConcurrentHashMap<>();
 
-    public List<String> findAll() {
-        return users;
+    public User save(User user) {
+        store.put(user.getId(), user);
+        return user;
     }
 
-    public void save(String username) {
-        users.add(username);
+    public Optional<User> findById(String id) {
+        return Optional.ofNullable(store.get(id));
     }
 
-    // Later: replace this with real JPA / DB
+    public Optional<User> findByEmail(String email) {
+        return store.values().stream()
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+    }
+
+    public boolean existsByEmail(String email) {
+        return findByEmail(email).isPresent();
+    }
 }

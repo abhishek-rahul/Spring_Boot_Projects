@@ -17,6 +17,8 @@ public class AppProperties {
 
     // --- getters & setters ---
 
+    private String uploadDir;
+
     public String getName() {
         return name;
     }
@@ -31,5 +33,13 @@ public class AppProperties {
 
     public void setEnv(String env) {
         this.env = env;
+    }
+
+    public String getUploadDir() {
+        return uploadDir;
+    }
+
+    public void setUploadDir(String uploadDir) {
+        this.uploadDir = uploadDir;
     }
 }
