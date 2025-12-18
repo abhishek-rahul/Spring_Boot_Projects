@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +28,13 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse body = base(req, HttpStatus.BAD_REQUEST, "VALIDATION_FAILED", "Validation failed");
         body.setFieldErrors(fields);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiErrorResponse> handleDataIntegrity(DataIntegrityViolationException ex,
+            HttpServletRequest req) {
+        ApiErrorResponse body = base(req, HttpStatus.BAD_REQUEST, "DATA_INTEGRITY_VIOLATION", "Data Integrity failed");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 

@@ -2,9 +2,27 @@ spring:
   config:
     activate:
       on-profile: dev
+      
+  datasource:
+    url: jdbc:postgresql://localhost:5442/userservicedb
+    username: userservice
+    password: userservice
+    driver-class-name: org.postgresql.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: update   # dev only; Flyway later
+    properties:
+      hibernate:
+        format_sql: true
 
 app:
-  env: hihiii
+  env: dev
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 # dev-only props can go here
 server:

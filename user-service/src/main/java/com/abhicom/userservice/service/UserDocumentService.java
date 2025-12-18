@@ -32,7 +32,8 @@ public class UserDocumentService {
 
     public UserDocument upload(String userId, MultipartFile file) {
         // 1) user must exist
-        userRepo.findById(userId).orElseThrow(() -> new NotFoundException("user not found: " + userId));
+        long useridlong = Long.parseLong(userId);
+        userRepo.findById(useridlong).orElseThrow(() -> new NotFoundException("user not found: " + userId));
 
         // 2) file must exist
         if (file == null || file.isEmpty()) {
@@ -75,7 +76,8 @@ public class UserDocumentService {
     }
 
     public List<UserDocument> list(String userId) {
-        userRepo.findById(userId).orElseThrow(() -> new NotFoundException("user not found: " + userId));
+        long useridlong = Long.parseLong(userId);
+        userRepo.findById(useridlong).orElseThrow(() -> new NotFoundException("user not found: " + userId));
         return docRepo.findByUserId(userId);
     }
 
