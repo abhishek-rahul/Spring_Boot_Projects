@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
   profiles:
-    active: prod   # default profile when running locally (can be overridden)
+    active: dev   # default profile when running locally (can be overridden)
   servlet:
     multipart:
       max-file-size: 10MB
