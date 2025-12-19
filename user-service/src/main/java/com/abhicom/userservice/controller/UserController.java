@@ -2,6 +2,7 @@ package com.abhicom.userservice.controller;
 
 import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
+import com.abhicom.userservice.dto.UserResponseDto;
 import com.abhicom.userservice.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -13,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 
 @Validated
 @RestController
@@ -46,15 +46,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(userid));
     }
 
+    @GetMapping("/user_address/{id}")
+    public ResponseEntity<UserResponseDto> getUserAddress(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserAddress(id));
+    }
+
     // ✅ GET /api/users?email=...
     // Now email is mandatory and validated here itself
     @GetMapping(params = "email")
     public ResponseEntity<UserResponse> search(
-            @RequestParam
-            @NotBlank(message = "email query param is required")
-            @Email(message = "email query param must be valid")
-            String email
-    ) {
+            @RequestParam @NotBlank(message = "email query param is required") @Email(message = "email query param must be valid") String email) {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
