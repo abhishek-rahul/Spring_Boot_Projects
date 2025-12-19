@@ -1,7 +1,9 @@
 package com.abhicom.userservice.service.impl;
 
+import com.abhicom.userservice.dto.AddressDto;
 import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
+import com.abhicom.userservice.dto.UserResponseDto;
 import com.abhicom.userservice.exception.BadRequestException;
 import com.abhicom.userservice.exception.NotFoundException;
 import com.abhicom.userservice.model.User;
@@ -61,6 +63,13 @@ public class UserServiceImpl implements UserService {
         return toUserResponse(user);
     }
 
+    @Override
+    public UserResponseDto getUserAddress(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        return toUserAddressResponse(user);
+    }
+
     /**
      * Fetch user by email
      */
@@ -80,6 +89,30 @@ public class UserServiceImpl implements UserService {
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
         response.setEmail(user.getEmail());
+        return response;
+    }
+
+
+    /**
+     * Entity → DTO mapping
+     */
+    private UserResponseDto toUserAddressResponse(User user) {
+        UserResponseDto response = new UserResponseDto();
+
+        List<AddressDto> addressDtos = user.getAddresses().stream().map(address -> {
+            AddressDto addressDto = new AddressDto();
+            addressDto.setCity(address.getCity());
+            addressDto.setState(address.getState());
+            addressDto.setCountry(address.getState());
+            addressDto.setPincode(address.getPincode());;
+            return addressDto;
+        }).toList();
+
+        response.setId(user.getId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
+        response.setAddresses(addressDtos);
         return response;
     }
 }
