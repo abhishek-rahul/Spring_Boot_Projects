@@ -1,6 +1,7 @@
 package com.abhicom.userservice.service;
 
 import com.abhicom.userservice.dto.CreateUserRequest;
+import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
 
@@ -12,4 +13,5 @@ public interface UserService {
     UserResponse getUserById(Long id);
     UserResponse getByEmail(String email);
     UserResponseDto getUserAddress(Long id);
+    UserResponseDto updateUserWithoutSave(Long id, UpdateUserRequest req);
 }

@@ -2,6 +2,7 @@ package com.abhicom.userservice.service.impl;
 
 import com.abhicom.userservice.dto.AddressDto;
 import com.abhicom.userservice.dto.CreateUserRequest;
+import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
 import com.abhicom.userservice.exception.BadRequestException;
@@ -9,6 +10,9 @@ import com.abhicom.userservice.exception.NotFoundException;
 import com.abhicom.userservice.model.User;
 import com.abhicom.userservice.repository.UserRepository;
 import com.abhicom.userservice.service.UserService;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -114,5 +118,26 @@ public class UserServiceImpl implements UserService {
         response.setEmail(user.getEmail());
         response.setAddresses(addressDtos);
         return response;
+    }
+
+    @Transactional
+    public UserResponseDto updateUserWithoutSave(Long id, UpdateUserRequest req) {
+        // 1) Fetch entity -> becomes "managed" inside persistence context
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 2) Modify fields (NO save call)
+        user.setFirstName(req.getFirstName());
+        user.setLastName(req.getLastName());
+        user.setEmail(req.getEmail());
+
+        // 3) Return DTO (DB update will happen via dirty checking)
+        UserResponseDto dto = new UserResponseDto();
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        // if you have addresses/orders mapping, keep consistent or omit here
+        return dto;
     }
 }
