@@ -11,6 +11,8 @@ import com.abhicom.userservice.model.User;
 import com.abhicom.userservice.repository.UserRepository;
 import com.abhicom.userservice.service.UserService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Create a new user
@@ -122,7 +127,6 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public UserResponseDto updateUserWithoutSave(Long id, UpdateUserRequest req) {
-        // 1) Fetch entity -> becomes "managed" inside persistence context
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -131,7 +135,9 @@ public class UserServiceImpl implements UserService {
         user.setLastName(req.getLastName());
         user.setEmail(req.getEmail());
 
-        // 3) Return DTO (DB update will happen via dirty checking)
+        // ✅ force flush NOW (SQL goes to DB immediately, but transaction not committed yet)
+        entityManager.flush();
+
         UserResponseDto dto = new UserResponseDto();
         dto.setId(user.getId());
         dto.setFirstName(user.getFirstName());
@@ -140,4 +146,5 @@ public class UserServiceImpl implements UserService {
         // if you have addresses/orders mapping, keep consistent or omit here
         return dto;
     }
+    
 }
