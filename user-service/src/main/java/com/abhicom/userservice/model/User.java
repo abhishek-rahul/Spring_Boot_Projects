@@ -25,6 +25,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private java.util.List<Orders> orders = new java.util.ArrayList<>();
+
     /* ===== Getters & Setters ===== */
 
     public Long getId() {
@@ -37,6 +40,14 @@ public class User {
 
     public List<Address> getAddresses() {
         return addresses;
+    }
+
+    public java.util.List<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(java.util.List<Orders> orders) {
+        this.orders = orders;
     }
 
     public void setAddresses(List<Address> addresses) {
