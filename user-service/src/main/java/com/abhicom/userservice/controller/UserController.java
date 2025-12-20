@@ -1,6 +1,7 @@
 package com.abhicom.userservice.controller;
 
 import com.abhicom.userservice.dto.CreateUserRequest;
+import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
 import com.abhicom.userservice.service.UserService;
@@ -44,6 +45,14 @@ public class UserController {
     public ResponseEntity<UserResponse> getById(@PathVariable String id) {
         long userid = Long.parseLong(id);
         return ResponseEntity.ok(userService.getUserById(userid));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest req
+    ) {
+        return ResponseEntity.ok(userService.updateUserWithoutSave(id, req));
     }
 
     @GetMapping("/user_address/{id}")
