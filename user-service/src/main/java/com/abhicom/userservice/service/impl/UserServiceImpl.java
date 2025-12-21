@@ -6,6 +6,7 @@ import com.abhicom.userservice.dto.OrderRowDto;
 import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
+import com.abhicom.userservice.dto.UserSummaryDto;
 import com.abhicom.userservice.dto.UserWithOrdersDto;
 import com.abhicom.userservice.exception.BadRequestException;
 import com.abhicom.userservice.exception.NotFoundException;
@@ -20,6 +21,7 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -176,6 +178,54 @@ public class UserServiceImpl implements UserService {
         d.setTotalAmount(o.getTotalAmount());
         d.setCreatedAt(o.getCreatedAt());
         return d;
+    }
+
+    @Transactional
+    public List<UserSummaryDto> getUsersSummaryWrongNPlusOne() {
+        // 1 query: loads users
+        List<User> users = userRepository.findAll();
+
+        // N additional queries: each time you touch user.getOrders()
+        return users.stream().map(u -> {
+            UserSummaryDto dto = new UserSummaryDto();
+            dto.setUserId(u.getId());
+            dto.setFirstName(u.getFirstName());
+            dto.setLastName(u.getLastName());
+            dto.setEmail(u.getEmail());
+
+            long count = u.getOrders().size(); // triggers lazy load per user (N queries)
+            dto.setOrdersCount(count);
+
+            // latest order date (also forces loading orders)
+            dto.setLatestOrderDate(
+                    u.getOrders().stream()
+                            .map(Orders::getCreatedAt)
+                            .max(Instant::compareTo)
+                            .orElse(null));
+
+            return dto;
+        }).toList();
+    }
+
+    @Transactional
+    public List<UserSummaryDto> getUsersSummaryFetchJoin() {
+        List<User> users = userRepository.findAllWithOrders(); // fewer queries
+
+        return users.stream().map(u -> {
+            UserSummaryDto dto = new UserSummaryDto();
+            dto.setUserId(u.getId());
+            dto.setFirstName(u.getFirstName());
+            dto.setLastName(u.getLastName());
+            dto.setEmail(u.getEmail());
+
+            dto.setOrdersCount(u.getOrders().size());
+            dto.setLatestOrderDate(
+                    u.getOrders().stream()
+                            .map(Orders::getCreatedAt)
+                            .max(Instant::compareTo)
+                            .orElse(null));
+            return dto;
+        }).toList();
     }
 
 }

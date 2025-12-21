@@ -4,6 +4,7 @@ import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
+import com.abhicom.userservice.dto.UserSummaryDto;
 import com.abhicom.userservice.dto.UserWithOrdersDto;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface UserService {
     UserResponseDto getUserAddress(Long id);
     UserResponseDto updateUserWithoutSave(Long id, UpdateUserRequest req);
     UserWithOrdersDto getUserWithOrders(Long id);
+    List<UserSummaryDto> getUsersSummaryWrongNPlusOne();
+    List<UserSummaryDto> getUsersSummaryFetchJoin();
 }
