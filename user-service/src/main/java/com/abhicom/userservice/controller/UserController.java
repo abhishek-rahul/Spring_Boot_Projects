@@ -4,6 +4,7 @@ import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
+import com.abhicom.userservice.dto.UserSummaryDto;
 import com.abhicom.userservice.dto.UserWithOrdersDto;
 import com.abhicom.userservice.service.UserService;
 import jakarta.validation.Valid;
@@ -71,6 +72,16 @@ public class UserController {
     public ResponseEntity<UserResponse> search(
             @RequestParam @NotBlank(message = "email query param is required") @Email(message = "email query param must be valid") String email) {
         return ResponseEntity.ok(userService.getByEmail(email));
+    }
+
+    @GetMapping("/summary-wrong")
+    public ResponseEntity<List<UserSummaryDto>> usersSummaryWrong() {
+        return ResponseEntity.ok(userService.getUsersSummaryWrongNPlusOne());
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<List<UserSummaryDto>> usersSummary() {
+        return ResponseEntity.ok(userService.getUsersSummaryFetchJoin());
     }
 
     // Content negotiation demo (already from Usecase A)
