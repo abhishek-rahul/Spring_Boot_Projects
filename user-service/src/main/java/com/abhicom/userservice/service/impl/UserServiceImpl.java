@@ -2,12 +2,15 @@ package com.abhicom.userservice.service.impl;
 
 import com.abhicom.userservice.dto.AddressDto;
 import com.abhicom.userservice.dto.CreateUserRequest;
+import com.abhicom.userservice.dto.OrderRowDto;
 import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
+import com.abhicom.userservice.dto.UserWithOrdersDto;
 import com.abhicom.userservice.exception.BadRequestException;
 import com.abhicom.userservice.exception.NotFoundException;
 import com.abhicom.userservice.model.User;
+import com.abhicom.userservice.model.Orders;
 import com.abhicom.userservice.repository.UserRepository;
 import com.abhicom.userservice.service.UserService;
 
@@ -101,7 +104,6 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-
     /**
      * Entity → DTO mapping
      */
@@ -113,7 +115,8 @@ public class UserServiceImpl implements UserService {
             addressDto.setCity(address.getCity());
             addressDto.setState(address.getState());
             addressDto.setCountry(address.getState());
-            addressDto.setPincode(address.getPincode());;
+            addressDto.setPincode(address.getPincode());
+            ;
             return addressDto;
         }).toList();
 
@@ -135,7 +138,8 @@ public class UserServiceImpl implements UserService {
         user.setLastName(req.getLastName());
         user.setEmail(req.getEmail());
 
-        // ✅ force flush NOW (SQL goes to DB immediately, but transaction not committed yet)
+        // ✅ force flush NOW (SQL goes to DB immediately, but transaction not committed
+        // yet)
         entityManager.flush();
 
         UserResponseDto dto = new UserResponseDto();
@@ -146,5 +150,32 @@ public class UserServiceImpl implements UserService {
         // if you have addresses/orders mapping, keep consistent or omit here
         return dto;
     }
-    
+
+    @Transactional
+    public UserWithOrdersDto getUserWithOrders(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Access orders inside transaction so LAZY load works
+        List<OrderRowDto> orders = user.getOrders().stream()
+                .map(this::toOrderRowDto)
+                .toList();
+
+        UserWithOrdersDto dto = new UserWithOrdersDto();
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setEmail(user.getEmail());
+        dto.setOrders(orders);
+        return dto;
+    }
+
+    private OrderRowDto toOrderRowDto(Orders o) {
+        OrderRowDto d = new OrderRowDto();
+        d.setId(o.getId());
+        d.setStatus(o.getStatus());
+        d.setTotalAmount(o.getTotalAmount());
+        d.setCreatedAt(o.getCreatedAt());
+        return d;
+    }
+
 }

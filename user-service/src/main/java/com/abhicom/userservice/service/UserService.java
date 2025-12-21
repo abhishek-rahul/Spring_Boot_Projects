@@ -4,6 +4,7 @@ import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
+import com.abhicom.userservice.dto.UserWithOrdersDto;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface UserService {
     UserResponse getByEmail(String email);
     UserResponseDto getUserAddress(Long id);
     UserResponseDto updateUserWithoutSave(Long id, UpdateUserRequest req);
+    UserWithOrdersDto getUserWithOrders(Long id);
 }

@@ -4,6 +4,7 @@ import com.abhicom.userservice.dto.CreateUserRequest;
 import com.abhicom.userservice.dto.UpdateUserRequest;
 import com.abhicom.userservice.dto.UserResponse;
 import com.abhicom.userservice.dto.UserResponseDto;
+import com.abhicom.userservice.dto.UserWithOrdersDto;
 import com.abhicom.userservice.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -50,14 +51,18 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateUserRequest req
-    ) {
+            @Valid @RequestBody UpdateUserRequest req) {
         return ResponseEntity.ok(userService.updateUserWithoutSave(id, req));
     }
 
     @GetMapping("/user_address/{id}")
     public ResponseEntity<UserResponseDto> getUserAddress(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserAddress(id));
+    }
+
+    @GetMapping("/{id}/with-orders")
+    public ResponseEntity<UserWithOrdersDto> getUserWithOrders(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserWithOrders(id));
     }
 
     // ✅ GET /api/users?email=...
