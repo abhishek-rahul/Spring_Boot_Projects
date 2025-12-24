@@ -27,8 +27,19 @@ public class Orders {
     @Column(nullable = false)
     private Instant createdAt;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private java.util.List<OrderItemEntity> items = new java.util.ArrayList<>();
+
     public Long getId() {
         return id;
+    }
+
+    public java.util.List<OrderItemEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(java.util.List<OrderItemEntity> items) {
+        this.items = items;
     }
 
     public void setId(Long id) {
@@ -69,4 +80,3 @@ public class Orders {
 
     // getters & setters
 }
-    
