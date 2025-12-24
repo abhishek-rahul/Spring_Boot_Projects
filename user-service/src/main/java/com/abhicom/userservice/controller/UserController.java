@@ -97,4 +97,11 @@ public class UserController {
         UserResponse u = userService.getUserById(userid);
         return ResponseEntity.ok(u.getFirstName() + " " + u.getLastName() + " <" + u.getEmail() + ">");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.softDeleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
