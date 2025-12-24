@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+// import org.hibernate.annotations.Where; // older Hibernate versions
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "uk_users_email", columnNames = "email"))
+@SQLDelete(sql = "UPDATE users SET active = false WHERE id = ?")
+@SQLRestriction("active = true")
+// @Where(clause = "active = true") // if you're on older Hibernate
 public class User {
 
     @Id
@@ -21,6 +27,9 @@ public class User {
 
     @Column(nullable = false)
     private String email;
+    
+    @Column(nullable = false)
+    private boolean active = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
@@ -32,6 +41,14 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public void setId(Long id) {

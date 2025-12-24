@@ -19,4 +19,5 @@ public interface UserService {
     UserWithOrdersDto getUserWithOrders(Long id);
     List<UserSummaryDto> getUsersSummaryWrongNPlusOne();
     List<UserSummaryDto> getUsersSummaryFetchJoin();
+    void softDeleteUser(Long id);
 }

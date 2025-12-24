@@ -228,4 +228,13 @@ public class UserServiceImpl implements UserService {
         }).toList();
     }
 
+    @Transactional
+    public void softDeleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // triggers @SQLDelete -> UPDATE users SET active=false WHERE id=?
+        userRepository.delete(user);
+    }
+
 }
