@@ -13,7 +13,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE users SET active = false WHERE id = ?")
 @SQLRestriction("active = true")
 // @Where(clause = "active = true") // if you're on older Hibernate
-public class User {
+public class User extends Auditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
