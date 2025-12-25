@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config
+  xmlns="http://www.ehcache.org/v3"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd">
+
+  <!-- cache region for UserEntity -->
+  <cache alias="com.abhicom.userservice.model.User">
+    <expiry>
+      <ttl unit="minutes">10</ttl>
+    </expiry>
+    <heap unit="entries">1000</heap>
+  </cache>
+
+</config>
