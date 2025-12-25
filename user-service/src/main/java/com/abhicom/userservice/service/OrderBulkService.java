@@ -10,7 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+//import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,6 @@ public class OrderBulkService {
             Orders order = new Orders();
             order.setUser(userRef);
             order.setStatus(o.getStatus());
-            order.setCreatedAt(Instant.now());
 
             BigDecimal total = BigDecimal.ZERO;
 
