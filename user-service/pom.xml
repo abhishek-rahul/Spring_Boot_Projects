@@ -31,6 +31,19 @@
 		<java.version>25</java.version>
 	</properties>
 	<dependencies>
+		<!-- Hibernate JCache integration (Hibernate 6.x recommended approach) -->
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-jcache</artifactId>
+		</dependency>
+
+		<!-- Ehcache 3 (JCache provider) -->
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<classifier>jakarta</classifier>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>

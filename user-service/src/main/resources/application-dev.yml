@@ -15,6 +15,15 @@ spring:
       ddl-auto: update   # dev only; Flyway later
     properties:
       hibernate:
+        cache:
+          use_second_level_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+        jakarta:
+          cache:
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
+            uri: classpath:ehcache.xml
+        generate_statistics: true
         format_sql: true
         jdbc:
           batch_size: 50
@@ -26,10 +35,13 @@ spring:
 app:
   env: dev
 
+hibernate.generate_statistics: true
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.stat: DEBUG
 
 # dev-only props can go here
 server:
