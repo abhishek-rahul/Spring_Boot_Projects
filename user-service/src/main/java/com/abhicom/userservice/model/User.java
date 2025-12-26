@@ -1,5 +1,6 @@
 package com.abhicom.userservice.model;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +8,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 // import org.hibernate.annotations.Where; // older Hibernate versions
-
-import jakarta.persistence.Cacheable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,7 +18,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @SQLDelete(sql = "UPDATE users SET active = false WHERE id = ?")
 @SQLRestriction("active = true")
 // @Where(clause = "active = true") // if you're on older Hibernate
-public class User extends Auditable{
+public class User extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +32,7 @@ public class User extends Auditable{
 
     @Column(nullable = false)
     private String email;
-    
+
     @Column(nullable = false)
     private boolean active = true;
 
@@ -42,6 +41,8 @@ public class User extends Auditable{
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private java.util.List<Orders> orders = new java.util.ArrayList<>();
+
+    private Instant lastCheckoutAt;
 
     /* ===== Getters & Setters ===== */
 
@@ -99,5 +100,13 @@ public class User extends Auditable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Instant getLastCheckoutAt() {
+        return lastCheckoutAt;
+    }
+
+    public void setLastCheckoutAt(Instant lastCheckoutAt) {
+        this.lastCheckoutAt = lastCheckoutAt;
     }
 }
